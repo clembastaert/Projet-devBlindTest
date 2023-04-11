@@ -3,6 +3,7 @@ import './App.css';
 import { fetchTracks } from './lib/fetchTracks';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { SavedTrack, Track } from 'spotify-types';
 
 const trackUrls = [
   'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
@@ -12,15 +13,39 @@ const trackUrls = [
   'https://p.scdn.co/mp3-preview/ac28d1b0be285ed3bfd8e9fa5fad133776d7cf36',
 ];
 
+const AlbumCover = ({ track }: { track: Track }) => {
+  const src = track.album.images[0]?.url; // A changer ;)
+  return <img src={src} style={{ width: 400, height: 400 }} />;
+};
+
 const App = () => {
   const [trackIndex, setTrackIndex] = useState(0);
   const goToNextTrack = () => {
     setTrackIndex(trackIndex + 1);
   };
-  const { data: tracks } = useQuery({
+
+  const {
+    data: tracks,
+    isError,
+    isLoading,
+  } = useQuery({
     queryKey: ['tracks'],
     queryFn: fetchTracks,
   });
+  if (isError) {
+    return <div className="App"> Token expired </div>;
+  }
+  if (isLoading) {
+    return <div className="App"> Loading ... </div>;
+  }
+  const currentTrack = tracks[trackIndex];
+  const firstSong = tracks[0];
+  const secondSong = tracks[1];
+  const thirdSong = tracks[2];
+
+  if (currentTrack === undefined)
+    return <div className="App"> Loading ... </div>;
+
   return (
     <div className="App">
       <header className="App-header">
@@ -30,14 +55,19 @@ const App = () => {
       <div className="App-images">
         <p>Il va falloir modifier le code pour faire un vrai blind test !</p>
       </div>
-      <audio src={trackUrls[trackIndex]} autoPlay controls />
+      <audio src={currentTrack.track.preview_url} autoPlay controls />
       <button onClick={goToNextTrack}> Next track </button>
       <p>
         {' '}
         Il y a {trackUrls.length} morceaux à deviner. Le titre de la chanson est{' '}
-        {tracks[trackIndex].track.name}
+        {currentTrack.track.name}
       </p>
-      <div className="App-buttons"></div>
+      <AlbumCover track={currentTrack.track} />
+      <div className="App-buttons">
+        <button> {firstSong.track.name} </button>
+        <button> {secondSong.track.name} </button>
+        <button> {thirdSong.track.name} </button>
+      </div>
     </div>
   );
 };
