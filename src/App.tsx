@@ -4,6 +4,7 @@ import { fetchTracks } from './lib/fetchTracks';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SavedTrack, Track } from 'spotify-types';
+import swal from 'sweetalert';
 
 const trackUrls = [
   'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
@@ -46,6 +47,12 @@ const App = () => {
   if (currentTrack === undefined)
     return <div className="App"> Loading ... </div>;
 
+  const checkId = ({ track }: { track: Track }) => {
+    if (track.id === currentTrack.track.id) {
+      return swal('Bravo', 'Tu as trouvé le bon morceau !', 'success');
+    } else swal('Dommage', "Tu n'as pas trouvé le bon morceau.", 'error');
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -64,9 +71,18 @@ const App = () => {
       </p>
       <AlbumCover track={currentTrack.track} />
       <div className="App-buttons">
-        <button> {firstSong.track.name} </button>
-        <button> {secondSong.track.name} </button>
-        <button> {thirdSong.track.name} </button>
+        <button onClick={() => checkId(firstSong)}>
+          {' '}
+          {firstSong.track.name}{' '}
+        </button>
+        <button onClick={() => checkId(secondSong)}>
+          {' '}
+          {secondSong.track.name}
+        </button>
+        <button onClick={() => checkId(thirdSong)}>
+          {' '}
+          {thirdSong.track.name}{' '}
+        </button>
       </div>
     </div>
   );
