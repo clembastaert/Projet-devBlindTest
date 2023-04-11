@@ -1,6 +1,8 @@
 import logo from './assets/logo.svg';
 import './App.css';
+import { fetchTracks } from './lib/fetchTracks';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 const trackUrls = [
   'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
@@ -15,7 +17,10 @@ const App = () => {
   const goToNextTrack = () => {
     setTrackIndex(trackIndex + 1);
   };
-
+  const { data: tracks } = useQuery({
+    queryKey: ['tracks'],
+    queryFn: fetchTracks,
+  });
   return (
     <div className="App">
       <header className="App-header">
@@ -27,6 +32,11 @@ const App = () => {
       </div>
       <audio src={trackUrls[trackIndex]} autoPlay controls />
       <button onClick={goToNextTrack}> Next track </button>
+      <p>
+        {' '}
+        Il y a {trackUrls.length} morceaux à deviner. Le titre de la chanson est{' '}
+        {tracks[trackIndex].track.name}
+      </p>
       <div className="App-buttons"></div>
     </div>
   );
