@@ -96,13 +96,13 @@ const App = () => {
         autoFocus
         controls
       />
-      <p> Il y a {tracks.length} morceaux à deviner.</p>
 
       <div className="App-buttons">
         <div className="Choice">
           <AlbumCover track={firstSong.track} />
           <button
             onClick={() => {
+              //clearTimeout(timeout),
               checkId(firstSong);
             }}
           >
@@ -114,6 +114,7 @@ const App = () => {
           <AlbumCover track={secondSong.track} />
           <button
             onClick={() => {
+              //clearTimeout(timeout),
               checkId(secondSong);
             }}
           >
@@ -125,6 +126,7 @@ const App = () => {
           <AlbumCover track={thirdSong.track} />
           <button
             onClick={() => {
+              //clearTimeout(timeout),
               checkId(thirdSong);
             }}
           >

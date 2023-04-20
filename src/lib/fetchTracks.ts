@@ -5,7 +5,8 @@ const apiToken: string =
 
 export const fetchTracks = async () => {
   let allTracks: SavedTrack[] = [];
-  let nextUrl = 'https://api.spotify.com/v1/me/tracks?limit=50';
+  let nextUrl =
+    'https://api.spotify.com/v1/playlists/37i9dQZF1DWYBO1MoTDhZI/tracks?limit=50';
 
   while (nextUrl) {
     const response = await fetch(nextUrl, {
