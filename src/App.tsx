@@ -12,7 +12,7 @@ const generate_random = (number: number) => {
 
 const AlbumCover = ({ track }: { track: Track }) => {
   const src = track.album.images[0]?.url; // A changer ;)
-  return <img src={src} style={{ width: 140, height: 140 }} />;
+  return <img src={src} style={{ width: 150, height: 150 }} />;
 };
 
 const App = () => {
@@ -71,7 +71,9 @@ const App = () => {
 
   const checkId = ({ track }: { track: Track }) => {
     if (track.id === currentTrack.track.id) {
-      return swal('Bravo', 'Tu as trouvé le bon morceau !', 'success');
+      return swal('Bravo', 'Tu as trouvé le bon morceau !', 'success').then(
+        () => setTrackIndex(nextIndex),
+      );
     } else swal('Dommage', "Tu n'as pas trouvé le bon morceau.", 'error');
   };
 
@@ -82,31 +84,37 @@ const App = () => {
         <h1 className="App-title">Blind test</h1>
       </header>
       <div className="App-images"></div>
-      <audio src={currentTrack.track.preview_url} autoPlay controls />
+      <audio
+        key={currentTrack.track.preview_url}
+        src={currentTrack.track.preview_url}
+        autoPlay
+        autoFocus
+        controls
+      />
       <button onClick={() => setTrackIndex(nextIndex)}> Next track </button>
       <p> Il y a {tracks.length} morceaux à deviner.</p>
 
       <div className="App-buttons">
         <div className="Choice">
+          <AlbumCover track={firstSong.track} />
           <button onClick={() => checkId(firstSong)}>
             {' '}
             {firstSong.track.name}{' '}
           </button>
-          <AlbumCover track={firstSong.track} />
         </div>
         <div className="Choice">
+          <AlbumCover track={secondSong.track} />
           <button onClick={() => checkId(secondSong)}>
             {' '}
             {secondSong.track.name}
           </button>
-          <AlbumCover track={secondSong.track} />
         </div>
         <div className="Choice">
+          <AlbumCover track={thirdSong.track} />
           <button onClick={() => checkId(thirdSong)}>
             {' '}
             {thirdSong.track.name}
           </button>
-          <AlbumCover track={thirdSong.track} />
         </div>
       </div>
     </div>
