@@ -6,25 +6,12 @@ import { useQuery } from '@tanstack/react-query';
 import { SavedTrack, Track } from 'spotify-types';
 import swal from 'sweetalert';
 
-const trackUrls = [
-  'https://p.scdn.co/mp3-preview/742294f35af9390e799dd96c633788410a332e52',
-  'https://p.scdn.co/mp3-preview/5a12483aa3b51331aba663131dbac967ccb33d99',
-  'https://p.scdn.co/mp3-preview/31f65b6a613010f22316c7be335b62226cf2f263',
-  'https://p.scdn.co/mp3-preview/0f6b8a3524ec410020457da4cdd7717f9addce2f',
-  'https://p.scdn.co/mp3-preview/ac28d1b0be285ed3bfd8e9fa5fad133776d7cf36',
-];
-
 const AlbumCover = ({ track }: { track: Track }) => {
   const src = track.album.images[0]?.url; // A changer ;)
-  return <img src={src} style={{ width: 400, height: 400 }} />;
+  return <img src={src} style={{ width: 140, height: 140 }} />;
 };
 
 const App = () => {
-  const [trackIndex, setTrackIndex] = useState(0);
-  const goToNextTrack = () => {
-    setTrackIndex(trackIndex + 1);
-  };
-
   const {
     data: tracks,
     isError,
@@ -39,12 +26,46 @@ const App = () => {
   if (isLoading) {
     return <div className="App"> Loading ... </div>;
   }
+  const [trackIndex, setTrackIndex] = useState(
+    Math.floor(Math.random() * (tracks.length + 1)),
+  );
+  const nextIndex = Math.floor(Math.random() * (tracks.length + 1));
+
+  //let Index2 = Math.floor(Math.random() * (tracks.length + 1));
+  //while (Index2 === trackIndex) {
+  //  Index2 = Math.floor(Math.random() * (tracks.length + 1));
+  //}
+  //let Index3 = Math.floor(Math.random() * (tracks.length + 1));
+  //while (Index3 === trackIndex || Index3 === Index2) {
+  //  Index3 = Math.floor(Math.random() * (tracks.length + 1));
+  //}
+
+  //const IndexSong = [trackIndex, Index2, Index3];
+  //const shuffledIndexSong = IndexSong.sort(() => Math.random() - 0.5);
+
+  //if (
+  //  shuffledIndexSong[0] === undefined ||
+  //  shuffledIndexSong[1] === undefined ||
+  //  shuffledIndexSong[2] === undefined
+  //) {
+  //  return <div className="App"> Loading ... </div>;
+  //}
+
   const currentTrack = tracks[trackIndex];
-  const firstSong = tracks[0];
+  const firstSong = tracks[trackIndex];
   const secondSong = tracks[1];
   const thirdSong = tracks[2];
+  //const secondSong = tracks[shuffledIndexSong[1]];
+  //const thirdSong = tracks[shuffledIndexSong[2]];
 
   if (currentTrack === undefined)
+    return <div className="App"> Loading ... </div>;
+
+  if (
+    firstSong === undefined ||
+    secondSong === undefined ||
+    thirdSong === undefined
+  )
     return <div className="App"> Loading ... </div>;
 
   const checkId = ({ track }: { track: Track }) => {
@@ -59,30 +80,33 @@ const App = () => {
         <img src={logo} className="App-logo" alt="logo" />
         <h1 className="App-title">Blind test</h1>
       </header>
-      <div className="App-images">
-        <p>Il va falloir modifier le code pour faire un vrai blind test !</p>
-      </div>
+      <div className="App-images"></div>
       <audio src={currentTrack.track.preview_url} autoPlay controls />
-      <button onClick={goToNextTrack}> Next track </button>
-      <p>
-        {' '}
-        Il y a {trackUrls.length} morceaux à deviner. Le titre de la chanson est{' '}
-        {currentTrack.track.name}
-      </p>
-      <AlbumCover track={currentTrack.track} />
+      <button onClick={() => setTrackIndex(nextIndex)}> Next track </button>
+      <p> Il y a {tracks.length} morceaux à deviner.</p>
+
       <div className="App-buttons">
-        <button onClick={() => checkId(firstSong)}>
-          {' '}
-          {firstSong.track.name}{' '}
-        </button>
-        <button onClick={() => checkId(secondSong)}>
-          {' '}
-          {secondSong.track.name}
-        </button>
-        <button onClick={() => checkId(thirdSong)}>
-          {' '}
-          {thirdSong.track.name}{' '}
-        </button>
+        <div className="Choice">
+          <button onClick={() => checkId(firstSong)}>
+            {' '}
+            {firstSong.track.name}{' '}
+          </button>
+          <AlbumCover track={firstSong.track} />
+        </div>
+        <div className="Choice">
+          <button onClick={() => checkId(secondSong)}>
+            {' '}
+            {secondSong.track.name}
+          </button>
+          <AlbumCover track={secondSong.track} />
+        </div>
+        <div className="Choice">
+          <button onClick={() => checkId(thirdSong)}>
+            {' '}
+            {thirdSong.track.name}
+          </button>
+          <AlbumCover track={thirdSong.track} />
+        </div>
       </div>
     </div>
   );

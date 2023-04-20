@@ -25,6 +25,9 @@
 .App-buttons {
   margin-top: 30px;
   margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .App-buttons .btn {
@@ -38,4 +41,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
