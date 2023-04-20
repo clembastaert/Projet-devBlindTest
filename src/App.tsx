@@ -16,6 +16,8 @@ const AlbumCover = ({ track }: { track: Track }) => {
 };
 
 const App = () => {
+  const [goodanswer, setGoodanswer] = useState(0);
+  const [badanswer, setBadanswer] = useState(0);
   const {
     data: tracks,
     isError,
@@ -30,8 +32,7 @@ const App = () => {
   if (isLoading) {
     return <div className="App"> Loading ... </div>;
   }
-  const [trackIndex, setTrackIndex] = useState(generate_random(tracks.length));
-  const nextIndex = generate_random(tracks.length);
+  const trackIndex = generate_random(tracks.length);
 
   let Index2 = generate_random(tracks.length);
   while (Index2 === trackIndex) {
@@ -72,11 +73,15 @@ const App = () => {
   const checkId = ({ track }: { track: Track }) => {
     if (track.id === currentTrack.track.id) {
       return swal('Bravo', 'Tu as trouvé le bon morceau !', 'success').then(
-        () => setTrackIndex(nextIndex),
+        () => setGoodanswer(goodanswer + 1),
       );
-    } else swal('Dommage', "Tu n'as pas trouvé le bon morceau.", 'error');
+    } else
+      swal('Dommage', "Tu n'as pas trouvé le bon morceau.", 'error').then(() =>
+        setBadanswer(badanswer + 1),
+      );
   };
 
+  //const timeout = setTimeout(() => setBadanswer(badanswer + 1), 30000);
   return (
     <div className="App">
       <header className="App-header">
@@ -91,32 +96,47 @@ const App = () => {
         autoFocus
         controls
       />
-      <button onClick={() => setTrackIndex(nextIndex)}> Next track </button>
       <p> Il y a {tracks.length} morceaux à deviner.</p>
 
       <div className="App-buttons">
         <div className="Choice">
           <AlbumCover track={firstSong.track} />
-          <button onClick={() => checkId(firstSong)}>
+          <button
+            onClick={() => {
+              checkId(firstSong);
+            }}
+          >
             {' '}
             {firstSong.track.name}{' '}
           </button>
         </div>
         <div className="Choice">
           <AlbumCover track={secondSong.track} />
-          <button onClick={() => checkId(secondSong)}>
+          <button
+            onClick={() => {
+              checkId(secondSong);
+            }}
+          >
             {' '}
             {secondSong.track.name}
           </button>
         </div>
         <div className="Choice">
           <AlbumCover track={thirdSong.track} />
-          <button onClick={() => checkId(thirdSong)}>
+          <button
+            onClick={() => {
+              checkId(thirdSong);
+            }}
+          >
             {' '}
             {thirdSong.track.name}
           </button>
         </div>
       </div>
+      <p>
+        {' '}
+        Score : {goodanswer}/{badanswer + goodanswer}{' '}
+      </p>
     </div>
   );
 };
