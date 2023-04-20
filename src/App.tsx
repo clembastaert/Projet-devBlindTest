@@ -6,6 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { SavedTrack, Track } from 'spotify-types';
 import swal from 'sweetalert';
 
+const generate_random = (number: number) => {
+  return Math.floor(Math.random() * number);
+};
+
 const AlbumCover = ({ track }: { track: Track }) => {
   const src = track.album.images[0]?.url; // A changer ;)
   return <img src={src} style={{ width: 140, height: 140 }} />;
@@ -26,37 +30,34 @@ const App = () => {
   if (isLoading) {
     return <div className="App"> Loading ... </div>;
   }
-  const [trackIndex, setTrackIndex] = useState(
-    Math.floor(Math.random() * (tracks.length + 1)),
+  const [trackIndex, setTrackIndex] = useState(generate_random(tracks.length));
+  const nextIndex = generate_random(tracks.length);
+
+  let Index2 = generate_random(tracks.length);
+  while (Index2 === trackIndex) {
+    Index2 = generate_random(tracks.length);
+  }
+  let Index3 = Math.floor(Math.random() * (tracks.length + 1));
+  while (Index3 === trackIndex || Index3 === Index2) {
+    Index3 = Math.floor(Math.random() * (tracks.length + 1));
+  }
+
+  const shuffledIndexSong = [trackIndex, Index2, Index3].sort(
+    () => Math.random() - 0.5,
   );
-  const nextIndex = Math.floor(Math.random() * (tracks.length + 1));
 
-  //let Index2 = Math.floor(Math.random() * (tracks.length + 1));
-  //while (Index2 === trackIndex) {
-  //  Index2 = Math.floor(Math.random() * (tracks.length + 1));
-  //}
-  //let Index3 = Math.floor(Math.random() * (tracks.length + 1));
-  //while (Index3 === trackIndex || Index3 === Index2) {
-  //  Index3 = Math.floor(Math.random() * (tracks.length + 1));
-  //}
-
-  //const IndexSong = [trackIndex, Index2, Index3];
-  //const shuffledIndexSong = IndexSong.sort(() => Math.random() - 0.5);
-
-  //if (
-  //  shuffledIndexSong[0] === undefined ||
-  //  shuffledIndexSong[1] === undefined ||
-  //  shuffledIndexSong[2] === undefined
-  //) {
-  //  return <div className="App"> Loading ... </div>;
-  //}
+  if (
+    shuffledIndexSong[0] === undefined ||
+    shuffledIndexSong[1] === undefined ||
+    shuffledIndexSong[2] === undefined
+  ) {
+    return <div className="App"> Loading ... </div>;
+  }
 
   const currentTrack = tracks[trackIndex];
-  const firstSong = tracks[trackIndex];
-  const secondSong = tracks[1];
-  const thirdSong = tracks[2];
-  //const secondSong = tracks[shuffledIndexSong[1]];
-  //const thirdSong = tracks[shuffledIndexSong[2]];
+  const firstSong = tracks[shuffledIndexSong[0]];
+  const secondSong = tracks[shuffledIndexSong[1]];
+  const thirdSong = tracks[shuffledIndexSong[2]];
 
   if (currentTrack === undefined)
     return <div className="App"> Loading ... </div>;
